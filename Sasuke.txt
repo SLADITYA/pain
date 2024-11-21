@@ -1,0 +1,59 @@
+function stockInterval() {
+    let count = 0;
+    const myfunc = setInterval(function() {
+        let num = Math.floor(Math.random()*10); 
+        const myPromise = new Promise((resolve, reject) => {
+            if (num >= 0) {
+                resolve(num);
+            }
+            else {
+                reject("Error: Negative number");
+            }
+        });
+        myPromise.then(num => console.log(num));
+        myPromise.catch(err => console.log(err));
+        count++;
+        if (count === 5) {
+            clearInterval(myfunc);
+        }
+    }, 2000);
+}
+stockInterval();
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <input type="text" name="name" id="name" placeholder="Enter your name" />
+    <input type="password" name="passwd" id="passwd" placeholder="Enter your password" />
+    <button id="btn">Login</button>
+
+    <script type="module" src="validateUser.js"></script>
+    <script type="module" src="login.js"></script>
+</body>
+</html>
+export class User {
+    constructor(name, password) {
+        this.name = name;
+        this.password = password;
+    }
+    validateUser(name, password) {
+        if (this.name == name && this.password == password) {
+            return "Login Successful";
+        }
+        else return "Unauthorized Access";
+    } 
+};
+import { User } from "./login.js";
+
+document.getElementById('btn').addEventListener('click', function() {
+    let name = document.getElementById('name').value;
+    let password = document.getElementById('passwd').value;
+    const user1 = new User("aditya", 123);
+    console.log(user1.validateUser(name, password));
+})
