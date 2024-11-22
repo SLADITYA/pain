@@ -1,0 +1,103 @@
+exports.package = async (req, res) => {
+    try {
+        res.status(200).json({
+            message: 'You can now get the requested notes for your request'
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message || err
+        });
+    }
+};
+exports.bookPackage = async (req, res) => {
+    try {
+        res.status(201).json({
+            message: 'New booking added to the POST request'
+        });
+    } catch (err) {
+        res.status(404).json({
+            status: 'fail',
+            message: err.message || err
+        });
+    }
+};
+exports.invalid = (req, res) => {
+    res.status(404).json({ status: 'fail', message: 'Invalid Path' });
+};
+
+
+exports.myMethod = async(req, res, next) => {
+    res.send("<h1>Welcome to Home Page</h1>");
+}
+exports.aboutMethod = async(req, res, next) => {
+    res.send("<h1>About Us Page</h1>");
+}
+
+
+const express = require('express');
+const routing = express.Router();
+const notesController = require('./myNotes');
+routing.get('/package', notesController.package);
+routing.post('/bookPackage', notesController.bookPackage);
+routing.all('*', notesController.invalid);
+module.exports = routing;
+
+const express = require('express');
+const routing = express.Router();
+const notesController = require('./myNotes');
+routing.get('/', notesController.myMethod);
+routing.get('/about', notesController.aboutMethod);
+module.exports = routing;
+
+
+const express = require('express');
+const route = require('./route');
+const app = express();
+app.use('/', route);
+app.listen(3000, () => {
+    console.log("Server running at port: 3000");
+});
+
+
+
+const express = require('express');
+const mongoose = require('mongoose');
+const app = express();
+
+// Server setup
+app.listen(3000, () => console.log("Server running on port 3000..."));
+
+// MongoDB connection URL
+const url = "mongodb+srv://mstdatabase:mstdatabase@cluster0.xx7bb4u.mongodb.net/?retryWrites=true&w=majority";
+
+// Connect to MongoDB
+mongoose.connect(url)
+  .then(() => console.log("Database Connected..."))
+  .catch(err => console.log(err));
+
+// Define a schema for books (this is where you define the structure of documents)
+const bookSchema = new mongoose.Schema({
+  name: { type: String, required: true },
+  isbn: { type: String, index: true, required: true },
+  author: { type: String, required: true },
+  pages: { type: Number, required: true }
+});
+
+// Wrap the schema into a model (the Model is what allows you to interact with the database)
+const Book = mongoose.model('Book', bookSchema);
+
+// Example usage of the Book model to create a new document
+const exampleBook = new Book({
+  name: "Example Book",
+  isbn: "123456789",
+  author: "John Doe",
+  pages: 250
+});
+
+// Save the example book to the database
+exampleBook.save()
+  .then(() => console.log("Book saved successfully"))
+  .catch(err => console.log("Error saving book: ", err));
+
+
